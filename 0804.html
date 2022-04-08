@@ -1,0 +1,69 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Наше вікно у three.js</title>
+		<style>
+			body { margin: 0; }
+		</style>
+		<script src="https://threejs.org/build/three.min.js"></script>
+	</head>
+
+	<body>
+		<script>
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setClearColor (0x999999);
+			renderer.clear();
+			document.body.appendChild( renderer.domElement );
+
+			const geometry = new THREE.BoxGeometry();
+			const material = new THREE.MeshBasicMaterial( { color: 0x00ff00, wireframe: true } );
+			const cube = new THREE.Mesh( geometry, material );
+			scene.add( cube );
+
+			cube.position.z=-3;
+
+			camera.position.z=3;
+
+			var phi=0;
+
+
+			//1) скористаємось конструктором класу CylinderGeometry:
+			var pyramidgeometry=new THREE.CylinderGeometry(0, 0.8, 2, 4);
+			//2) визначимо матеріал, що відбиває промені:
+			var pyramidmaterial=new THREE.MeshLambertMaterial({color: 0xF3FFE2});
+			//3) комбінуємо геометрію та матеріал:
+			var pyramidmesh=new THREE.Mesh(pyramidgeometry, pyramidmaterial);
+			scene.add(pyramidmesh);
+			pyramidmesh.position.set(0, 2, -10);
+			//pyramidmesh.position.x=2;
+
+
+			//– розсіяне
+			var lightOne=new THREE.AmbientLight(0xffff, 0.5);
+			scene.add(lightOne);
+			//– точкове:
+			var lightTwo=new THREE.PointLight(0xffff, 0.5);
+			scene.add(lightTwo);
+
+			function animate() {
+				requestAnimationFrame( animate );
+
+				camera.position.x = 5*Math.cos(phi);
+				camera.position.y = 5*Math.sin(phi);
+				phi+=Math.PI/180;
+				//cube.position.z-=0.1;
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+
+				renderer.render( scene, camera );
+			}
+
+			animate();
+
+		</script>
+	</body>
+</html>
